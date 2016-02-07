@@ -1,0 +1,34 @@
+{
+  "name": "rx/await",
+  "type": "library",
+  "description": "Provides await functionality for RxPHP",
+  "keywords": [
+    "rxphp",
+    "reactivex",
+    "rx.php",
+    "await",
+    "reactphp"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Dan",
+      "email": "davidwdan@gmail.com",
+      "role": "Developer"
+    },
+    {
+      "name": "Matt Bonneau",
+      "email": "matt@bonneau.net",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "require": {
+    "reactivex/rxphp": "^1.0",
+    "voryx/event-loop": "^0.2.0"
+  }
+}
