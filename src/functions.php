@@ -2,6 +2,7 @@
 
 namespace Rx;
 
+use React\EventLoop\LoopInterface;
 use Rx\Observer\CallbackObserver;
 use Rx\Scheduler\EventLoopScheduler;
 
@@ -9,36 +10,36 @@ use Rx\Scheduler\EventLoopScheduler;
  * Wait until observable completes.
  *
  * @param Observable|ObservableInterface $observable
- * @param EventLoopScheduler $scheduler
+ * @param LoopInterface $loop
  * @return \Generator
  */
-function await(Observable $observable, EventLoopScheduler $scheduler = null)
+function await(Observable $observable, LoopInterface $loop = null)
 {
 
     $completed = false;
     $results   = [];
-    $scheduler = $scheduler ?: new EventLoopScheduler(\EventLoop\getLoop());
+    $loop      = $loop ?: \EventLoop\getLoop();
+    $scheduler = new EventLoopScheduler($loop);
 
-    $observable
-        ->subscribe(new CallbackObserver(
-            function ($value) use (&$results, &$results) {
-                $results[] = $value;
+    $observable->subscribe(new CallbackObserver(
+        function ($value) use (&$results, &$results, $loop) {
+            $results[] = $value;
 
-                \EventLoop\getLoop()->stop();
-            },
-            function ($e) use (&$completed) {
-                $completed = true;
-                throw $e;
-            },
-            function () use (&$completed) {
-                $completed = true;
-            }
+            $loop->stop();
+        },
+        function ($e) use (&$completed) {
+            $completed = true;
+            throw $e;
+        },
+        function () use (&$completed) {
+            $completed = true;
+        }
 
-        ), $scheduler);
+    ), $scheduler);
 
     while (!$completed) {
 
-        \EventLoop\getLoop()->run();
+        $loop->run();
 
         foreach ($results as $result) {
             yield $result;
