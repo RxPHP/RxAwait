@@ -1,7 +1,10 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-
+$loop = \EventLoop\getLoop();
+Rx\Scheduler::setDefaultFactory(function() use($loop){
+    return new Rx\Scheduler\EventLoopScheduler($loop);
+});
 
 $source = \Rx\Observable::interval(1000)
     ->take(5); //Take the first 5

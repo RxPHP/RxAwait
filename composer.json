@@ -28,7 +28,7 @@
     ]
   },
   "require": {
-    "reactivex/rxphp": "^1.0",
+    "reactivex/rxphp": "^2.0",
     "voryx/event-loop": "^0.2.0"
   }
 }

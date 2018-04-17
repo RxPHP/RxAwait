@@ -1,9 +1,15 @@
 <?php
-
 require __DIR__ . '/../vendor/autoload.php';
 
+use React\EventLoop\LoopInterface;
+
+$loop = \EventLoop\getLoop();
+Rx\Scheduler::setDefaultFactory(function() use($loop){
+    return new Rx\Scheduler\EventLoopScheduler($loop);
+});
 
 $source = \Rx\Observable::range(0, 5)->delay(1000);
+
 
 /** @var Generator $generator */
 $generator = \Rx\await($source);

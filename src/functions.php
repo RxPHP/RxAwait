@@ -4,7 +4,6 @@ namespace Rx;
 
 use React\EventLoop\LoopInterface;
 use Rx\Observer\CallbackObserver;
-use Rx\Scheduler\EventLoopScheduler;
 
 /**
  * Wait until observable completes.
@@ -15,14 +14,12 @@ use Rx\Scheduler\EventLoopScheduler;
  */
 function await(Observable $observable, LoopInterface $loop = null)
 {
-
     $completed = false;
     $results   = [];
     $loop      = $loop ?: \EventLoop\getLoop();
-    $scheduler = new EventLoopScheduler($loop);
 
     $observable->subscribe(new CallbackObserver(
-        function ($value) use (&$results, &$results, $loop) {
+        function ($value) use (&$results, $loop) {
             $results[] = $value;
 
             $loop->stop();
@@ -35,7 +32,7 @@ function await(Observable $observable, LoopInterface $loop = null)
             $completed = true;
         }
 
-    ), $scheduler);
+    ));
 
     while (!$completed) {
 

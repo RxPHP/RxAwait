@@ -3,6 +3,10 @@
 //This example requires https://github.com/RxPHP/RxHttp
 
 require __DIR__ . '/../vendor/autoload.php';
+$loop = \EventLoop\getLoop();
+Rx\Scheduler::setDefaultFactory(function() use($loop){
+    return new Rx\Scheduler\EventLoopScheduler($loop);
+});
 
 $terms  = ["rxphp", "php", "make php great again"];
 $search = \Rx\Observable::fromArray($terms)

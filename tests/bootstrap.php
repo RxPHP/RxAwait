@@ -9,7 +9,6 @@ $locations = [
     __DIR__ . '/../../../../',
 ];
 
-
 foreach ($locations as $location) {
 
     $file = $location . "vendor/autoload.php";
@@ -32,3 +31,8 @@ foreach ($locations as $location) {
         break;
     }
 }
+
+$loop = \EventLoop\getLoop();
+Rx\Scheduler::setDefaultFactory(function() use($loop){
+    return new Rx\Scheduler\EventLoopScheduler($loop);
+});
