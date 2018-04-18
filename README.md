@@ -12,10 +12,7 @@ It uses the [Voryx event-loop](https://github.com/voryx/event-loop) which behave
 ```PHP
 
 require __DIR__ . '/../vendor/autoload.php';
-$loop = \EventLoop\getLoop();
-Rx\Scheduler::setDefaultFactory(function() use($loop){
-    return new Rx\Scheduler\EventLoopScheduler($loop);
-});
+
 //Do some aysnc craziness with observables
 $observable = \Rx\Observable::interval(1000);
 
@@ -40,10 +37,6 @@ Since observables can return 1 to an infinite number of results, you'll need to 
 
 ```PHP
 require __DIR__ . '/../vendor/autoload.php';
-$loop = \EventLoop\getLoop();
-Rx\Scheduler::setDefaultFactory(function() use($loop){
-    return new Rx\Scheduler\EventLoopScheduler($loop);
-});
 
 $source = \Rx\Observable::interval(1000)
     ->takeUntil(\Rx\Observable::timer(10000)); //timeout after 10 seconds
