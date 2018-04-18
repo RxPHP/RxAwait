@@ -2,6 +2,7 @@
 
 namespace Rx\React\Tests;
 
+use function Rx\cancelAwait;
 use Rx\Functional\FunctionalTestCase;
 use Rx\Observable;
 
@@ -68,4 +69,28 @@ class FunctionAwaitTest extends FunctionalTestCase
 
     }
 
+    /**
+     * @test
+     */
+    public function await_cancel()
+    {
+        $array = [1, 2, 3];
+
+        $observable = Observable::fromArray($array);
+
+        $generator = \Rx\await($observable);
+
+        $result = [];
+        foreach ($generator as $item) {
+            if ($item === 2) {
+                cancelAwait($generator);
+            }
+
+            $result[] = $item;
+        }
+
+        $this->assertEquals([1, 2], $result);
+        $this->assertEquals(count($result), 2);
+
+    }
 }

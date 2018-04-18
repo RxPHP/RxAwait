@@ -3,7 +3,8 @@
 namespace Rx;
 
 use React\EventLoop\LoopInterface;
-use Rx\Observer\CallbackObserver;
+
+const AWAIT_CANCEL = 'cancel';
 
 /**
  * Wait until observable completes.
@@ -12,13 +13,13 @@ use Rx\Observer\CallbackObserver;
  * @param LoopInterface $loop
  * @return \Generator
  */
-function await(Observable $observable, LoopInterface $loop = null)
+function await(Observable $observable, LoopInterface $loop = null): \Generator
 {
     $completed = false;
     $results   = [];
     $loop      = $loop ?: \EventLoop\getLoop();
 
-    $observable->subscribe(new CallbackObserver(
+    $disposable = $observable->subscribe(
         function ($value) use (&$results, $loop) {
             $results[] = $value;
 
@@ -30,18 +31,26 @@ function await(Observable $observable, LoopInterface $loop = null)
         },
         function () use (&$completed) {
             $completed = true;
-        }
-
-    ));
+        });
 
     while (!$completed) {
 
         $loop->run();
 
         foreach ($results as $result) {
-            yield $result;
+            $cancel = yield $result;
+
+            if ($cancel === AWAIT_CANCEL) {
+                $disposable->dispose();
+                return;
+            }
         }
 
         $results = [];
     }
+}
+
+function cancelAwait(\Generator $generator)
+{
+    $generator->send(AWAIT_CANCEL);
 }
