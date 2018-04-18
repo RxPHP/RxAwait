@@ -4,7 +4,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$terms  = ["rxphp", "php", "make php great again"];
+$terms  = ['rxphp', 'php', 'make php great again'];
 $search = \Rx\Observable::fromArray($terms)
     ->map(function ($term) {
         return urlencode($term);
@@ -13,19 +13,18 @@ $search = \Rx\Observable::fromArray($terms)
         return \Rx\React\Http::get("http://www.google.com/search?q={$term}")
             ->map(function ($result) use ($term) {
                 return [
-                    "term" => $term,
-                    "page" => $result
+                    'term' => $term,
+                    'page' => $result
                 ];
             });
     });
 
-
 $generator = \Rx\await($search);
 
-echo "BLOCKING", PHP_EOL;
+echo 'BLOCKING', PHP_EOL;
 
 foreach ($generator as $item) {
     echo "Result page for: {$item['term']}", PHP_EOL, $item['page'];
 }
 
-echo "DONE";
+echo 'DONE';

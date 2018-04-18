@@ -2,7 +2,6 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-
 $source = \Rx\Observable::error(new Exception('some error'));
 
 $generator = \Rx\await($source);
@@ -12,10 +11,5 @@ try {
         echo $item, PHP_EOL;
     }
 } catch (\Exception $e) {
-    echo "caught error: ", $e->getMessage();
+    echo 'caught error: ', $e->getMessage();
 }
-
-
-
-
-

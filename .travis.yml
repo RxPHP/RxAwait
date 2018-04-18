@@ -1,17 +1,47 @@
 language: php
-sudo: required
-
-php:
-  - 5.6
-  - 7
-  - hhvm
 
 matrix:
-  allow_failures:
-    - php: hhvm
+  include:
+    - php: 7.0
+      env:
+        - qaExtended=true
+    - php: 7.1
+    - php: 7.2
+      env:
+        - dropPlatform=false
+    - php: nightly
+      env:
+        - dropPlatform=false
+    - php: 7.0
+      env:
+        - dependencies=lowest
+    - php: 7.1
+      env:
+        - dependencies=lowest
+    - php: 7.2
+      env:
+        - dependencies=lowest
+        - dropPlatform=false
+    - php: nightly
+      env:
+        - dependencies=lowest
+        - dropPlatform=false
+    - php: 7.0
+      env:
+        - dependencies=highest
+    - php: 7.1
+      env:
+        - dependencies=highest
+    - php: 7.2
+      env:
+        - dependencies=highest
+        - dropPlatform=false
+    - php: nightly
+      env:
+        - dependencies=highest
+        - dropPlatform=false
 
-install:
-  - composer install
+before_script: composer install
 
 script:
-  - phpunit
+  - vendor/bin/phpunit
