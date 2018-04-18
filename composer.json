@@ -27,8 +27,20 @@
       "src/functions.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Rx\\React\\Tests\\": "tests/",
+      "Rx\\": "vendor/reactivex/rxphp/test/Rx"
+    },
+    "files": [
+      "vendor/reactivex/rxphp/test/helper-functions.php"
+    ]
+  },
   "require": {
     "reactivex/rxphp": "^2.0",
-    "voryx/event-loop": "^0.2.0"
+    "voryx/event-loop": "^2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0"
   }
 }
